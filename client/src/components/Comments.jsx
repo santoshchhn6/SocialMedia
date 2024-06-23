@@ -54,9 +54,9 @@ const AddComment = ({ postId, userId, auther }) => {
 
     if (comment) {
       try {
-        const newComment = { userId, auther, comment };
+        const newComment = { userId, postId, auther, comment };
         const response = await axios.post(
-          `http://localhost:5000/posts/addComment/${postId}`,
+          `http://localhost:5000/posts/addComment`,
           newComment
         );
         console.log(response);

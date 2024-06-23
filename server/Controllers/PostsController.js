@@ -46,26 +46,26 @@ export const createPost = async (req, res, next) => {
   }
 };
 
-export const likePost = async (req, res, next) => {
-  try {
-    const id = req.params.id;
+// export const likePost = async (req, res, next) => {
+//   try {
+//     const id = req.params.id;
 
-    let likes = 1;
-    const post = await Post.findById(id);
-    if (post) likes = post.likes + 1;
-    await Post.findByIdAndUpdate(id, { likes });
+//     let likes = 1;
+//     const post = await Post.findById(id);
+//     if (post) likes = post.likes + 1;
+//     await Post.findByIdAndUpdate(id, { likes });
 
-    res.status(200).json({
-      message: "like added",
-      success: true,
-      likes,
-    });
+//     res.status(200).json({
+//       message: "like added",
+//       success: true,
+//       likes,
+//     });
 
-    next();
-  } catch (error) {
-    console.error(error);
-  }
-};
+//     next();
+//   } catch (error) {
+//     console.error(error);
+//   }
+// };
 
 export const deletePost = async (req, res, next) => {
   try {

@@ -5,7 +5,7 @@ import { MdOutlineInsertComment } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
 import { incrementLikes, removePost } from "../redux/postSlice";
 import Comments from "./Comments";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Post = ({ data }) => {
   const [showComments, setShowComments] = useState(false);
@@ -22,7 +22,7 @@ const Post = ({ data }) => {
           className="w-full aspect-video object-cover rounded-md"
         />
         <div className="flex gap-5">
-          <LikePost likes={data?.likes} id={data?._id} />
+          <LikePost postId={data?._id} userId={user._id} />
 
           <div
             onClick={() => {
@@ -46,20 +46,42 @@ const Post = ({ data }) => {
   );
 };
 
-const LikePost = ({ likes, id }) => {
-  const [currentlikes, setLikes] = useState(likes);
+const LikePost = ({ postId, userId }) => {
+  const [liked, setLiked] = useState(false);
+  const [count, setCount] = useState(0);
   // const dispatch = useDispatch();
 
+  useEffect(() => {
+    const fetchLikes = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/posts/getLike?userId=${userId}&postId=${postId}`
+        );
+        console.log(response);
+        if (response?.data.success) {
+          setCount(response.data.count);
+          if (response.data.like.userId == userId) setLiked(true);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchLikes();
+  }, []);
+
   const handleLike = async () => {
+    console.log("clicked");
     try {
-      const response = await axios.put(
-        `http://localhost:5000/posts/likePost/${id}`
+      const newLike = { userId, postId };
+      const response = await axios.post(
+        `http://localhost:5000/posts/likePost/`,
+        newLike
       );
       console.log(response);
       if (response?.data.success) {
+        setCount(response.data.count);
         console.log("liked post");
-        setLikes(response.data.likes);
-        // dispatch(incrementLikes(id));
+        setLiked(!liked);
       }
     } catch (error) {
       console.log(error);
@@ -67,12 +89,14 @@ const LikePost = ({ likes, id }) => {
   };
 
   return (
-    <div className="flex gap-2 items-center cursor-pointer">
-      {currentlikes}{" "}
+    <div className="flex items-center gap-1">
+      {count}
       <FaRegThumbsUp
         size={20}
         onClick={handleLike}
-        className="hover:text-blue-600"
+        className={` ${
+          liked ? "text-blue-700" : "text-gray-600"
+        } hover:text-blue-600 cursor-pointer`}
       />
     </div>
   );

@@ -3,11 +3,11 @@ import {
   createPost,
   deletePost,
   getPosts,
-  likePost,
 } from "../Controllers/PostsController.js";
 import { tokenVarification } from "../Middlewares/TokenVarification.js";
 import { addComment, getComments } from "../Controllers/CommentController.js";
 import { upload } from "../util/uploadImage.js";
+import { addLike, getLike } from "../Controllers/LikeController.js";
 
 const router = express.Router();
 
@@ -18,10 +18,12 @@ router.post(
   createPost
 );
 router.delete("/delete/:id", tokenVarification, deletePost);
-
 router.get("/", getPosts);
-router.put("/likePost/:id", likePost);
-router.post("/addComment/:id", addComment);
+
+router.post("/likePost/", addLike);
+router.get("/getLike/", getLike);
+
+router.post("/addComment/", addComment);
 router.get("/getComments", getComments);
 
 export default router;
