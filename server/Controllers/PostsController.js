@@ -32,12 +32,12 @@ export const createPost = async (req, res, next) => {
     const { userId, title } = req.body;
     // console.log(req.file);
     const newPost = { userId, title, image: req.file.filename, likes: 0 };
-    await Post.create(newPost);
+    const post = await Post.create(newPost);
 
     res.status(200).json({
       message: "Post created",
       success: true,
-      post: newPost,
+      post,
     });
 
     next();
